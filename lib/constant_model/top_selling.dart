@@ -1,0 +1,68 @@
+import 'models.dart' show NewProduct;
+
+final List<NewProduct> topselling = [
+  NewProduct(
+    id: 1,
+    name: 'Product 9',
+    image: 'assets/images/product09.png',
+    prices: 980,
+    description: 'High-quality product with advanced features.',
+    productRating: 4.5,
+    quantity: 1,
+  ),
+  NewProduct(
+    id: 2,
+    name: 'Product 8',
+    image: 'assets/images/product08.png',
+    prices: 980,
+    description: 'Durable and reliable for everyday use.',
+    productRating: 4.5,
+    quantity: 2,
+  ),
+  NewProduct(
+    id: 3,
+    name: 'Product 7',
+    image: 'assets/images/product07.png',
+    prices: 980,
+    description: 'Elegant design with premium materials.',
+    productRating: 4.5,
+    quantity: 3,
+  ),
+  NewProduct(
+    id: 4,
+    name: 'Product 6',
+    image: 'assets/images/product06.png',
+    prices: 980,
+    description: 'Innovative technology for modern needs.',
+    productRating: 4.5,
+    quantity: 4,
+  ),
+  NewProduct(
+    id: 5,
+    name: 'Product 5',
+    image: 'assets/images/product05.png',
+    prices: 980,
+    description: 'Compact and lightweight for portability.',
+    productRating: 4.5,
+    quantity: 5,
+  ),
+  NewProduct(
+    id: 6,
+    name: 'Product 4',
+    image: 'assets/images/product04.png',
+    prices: 980,
+    description: 'High-performance specs for professionals.',
+    productRating: 4.5,
+    quantity: 6,
+  ),
+  NewProduct(
+    id: 7,
+    name: 'Product 3',
+    image: 'assets/images/product03.png',
+    prices: 980,
+    description: 'Affordable yet feature-packed option.',
+    productRating: 4.5,
+    quantity: 7,
+  ),
+];
+

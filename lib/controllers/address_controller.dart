@@ -80,7 +80,6 @@ class AddressController extends GetxController {
     addressList[index] = updatedAddress;
     saveAddresses();
     addressList.refresh();
-    clearForm();
   }
 
   void deleteAddress(int index) {
@@ -93,16 +92,18 @@ class AddressController extends GetxController {
     // Load the selected address into form fields
     final selectedAddress = addressList[index];
     loadInitialData(selectedAddress);
-
+    addressList.refresh();
     // Optional: save default permanently
     box.write('defaultIndex', index);
     Get.snackbar(
       'Default Address',
       'This address is now set as default.',
-      backgroundColor: Colors.teal,
+      backgroundColor: Colors.grey,
       colorText: Colors.white,
       snackPosition: SnackPosition.BOTTOM,
+      margin: EdgeInsets.only(bottom: 50, left: 10, right: 10),
     );
+
   }
 
   void saveAddresses() {

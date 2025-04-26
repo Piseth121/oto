@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart' show RatingBar;
+import 'package:flutter_rating_bar/flutter_rating_bar.dart'
+    show RatingBar, RatingBarIndicator;
+import 'package:intl/intl.dart';
 import '../../constant_model/models.dart';
 import '../../constant_model/new_product.dart';
 import '../../widgets/chat.dart';
@@ -7,14 +9,14 @@ import '../../widgets/itme_card_1.dart';
 import 'package:get/get.dart';
 import '../controllers/cart_controller.dart';
 import '../controllers/favotite_controller.dart';
+import '../controllers/review_controller.dart';
+import '../models/review_model.dart';
 import 'cart_page.dart';
-
 
 class DetailPage extends StatefulWidget {
   final NewProduct proData;
 
-  const DetailPage({super.key,required this.proData,});
-
+  DetailPage({super.key, required this.proData});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -23,7 +25,9 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   final CartController cartController = Get.put(CartController());
   final FavoriteController favoriteController = Get.put(FavoriteController());
+  final ReviewController reviewController = Get.put(ReviewController());
   late bool isFavorite;
+  final RxBool showAllReviews = false.obs;
 
   @override
   void initState() {
@@ -31,29 +35,95 @@ class _DetailPageState extends State<DetailPage> {
     isFavorite = favoriteController.isFavorite(widget.proData);
   }
 
+  void showReviewDialog() {
+    final nameController = TextEditingController();
+    final commentController = TextEditingController();
+    double rating = 3.0;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Write a Review'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(labelText: 'Your Name'),
+                ),
+                SizedBox(height: 10),
+                Text('Your Rating'),
+                RatingBar.builder(
+                  initialRating: 3,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 30,
+                  itemBuilder:
+                      (context, _) => Icon(Icons.star, color: Colors.amber),
+                  onRatingUpdate: (value) {
+                    rating = value;
+                  },
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  controller: commentController,
+                  maxLines: 3,
+                  decoration: InputDecoration(labelText: 'Your Comment'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.red),
+              child: Text('Cancel', style: TextStyle(color: Colors.white)),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              child: Text('Submit', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                final review = Review(
+                  name: nameController.text.trim(),
+                  rating: rating,
+                  comment: commentController.text.trim(),
+                  timestamp: DateTime.now(),
+                );
+                reviewController.addReview(review);
+                Navigator.of(context).pop();
+                Get.snackbar('Review Added', 'Thanks for your feedback!');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text(
+        title: Text(
           widget.proData.name,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-      //backgroundColor: Colors.blue,
-    ),
+        //backgroundColor: Colors.blue,
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            SizedBox(height: 10,),
+            SizedBox(height: 10),
             _buildImage(),
             _buildInfo(),
             _buildRecommendProduct(),
+            _buildReviewsSection(),
           ],
         ),
       ),
@@ -61,30 +131,27 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
-  Widget _buildImage(){
+  Widget _buildImage() {
     return Stack(
       children: [
         SizedBox(
           width: double.infinity,
           height: 350,
-          child: Image.asset(widget.proData.image, fit: BoxFit.cover,),
-        )
+          child: Image.asset(widget.proData.image, fit: BoxFit.cover),
+        ),
       ],
     );
   }
 
-  Widget _buildInfo(){
+  Widget _buildInfo() {
     return Padding(
-      padding: const EdgeInsets.only(left: 10,top: 10),
+      padding: const EdgeInsets.only(left: 10, top: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             widget.proData.name,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           Row(
             children: [
@@ -95,10 +162,8 @@ class _DetailPageState extends State<DetailPage> {
                 allowHalfRating: true,
                 itemCount: 5,
                 itemSize: 20,
-                itemBuilder: (context, _) => const Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                ),
+                itemBuilder:
+                    (context, _) => const Icon(Icons.star, color: Colors.amber),
                 onRatingUpdate: (rating) {
                   // Handle rating update
                 },
@@ -106,18 +171,20 @@ class _DetailPageState extends State<DetailPage> {
               const SizedBox(width: 8),
               Text(
                 '4.5/5',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
               ),
-              SizedBox(width: MediaQuery.of(context).size.width*0.45,),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.45),
               IconButton(
                 onPressed: () {
                   setState(() {
                     favoriteController.toggleFavorite(widget.proData);
                     isFavorite = favoriteController.isFavorite(widget.proData);
-                    Get.snackbar('Favorite', isFavorite ? 'Added to favorites' : 'Removed from favorites');
+                    Get.snackbar(
+                      'Favorite',
+                      isFavorite
+                          ? 'Added to favorites'
+                          : 'Removed from favorites',
+                    );
                   });
                 },
                 icon: Icon(
@@ -125,11 +192,10 @@ class _DetailPageState extends State<DetailPage> {
                   size: 30,
                   color: isFavorite ? Colors.red : Colors.grey,
                 ),
-              )
-
+              ),
             ],
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           // Product Price
           Text(
             '\$${widget.proData.prices.toStringAsFixed(2)}',
@@ -139,84 +205,95 @@ class _DetailPageState extends State<DetailPage> {
               color: Colors.red,
             ),
           ),
-          Divider(height: 20,color: Colors.black,),
-          Text("Description",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14),),
+          Divider(height: 20, color: Colors.black),
+          Text(
+            "Description",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+          ),
           Text(
             widget.proData.description,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.black54,
-            ),
+            style: const TextStyle(fontSize: 16, color: Colors.black54),
           ),
-          SizedBox(height: 50,),
+          SizedBox(height: 50),
           Divider(),
-
         ],
       ),
     );
   }
 
-  Widget _buildBottom(){
+  Widget _buildBottom() {
     return BottomAppBar(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            IconButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Chat()));
-            }, icon: Icon(Icons.messenger_outline,size: 25,color: Colors.black,)),
-            SizedBox(width: 20,),
+            Card(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Chat()),
+                  );
+                },
+                icon: Icon(
+                  Icons.messenger_outline,
+                  size: 25,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            SizedBox(width: 20),
             // Add to Cart Button
             Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Add to cart logic
-                      cartController.addToCart(widget.proData); // 🛒 Add product
-                      Get.to(() => CartPage()); // Navigate to CartPage
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 10), backgroundColor: Colors.redAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child:Text(
-                      'Add to Cart',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add to cart logic
+                    cartController.addToCart(widget.proData); // 🛒 Add product
+                    Get.to(() => CartPage()); // Navigate to CartPage
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    backgroundColor: Colors.redAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                )
+                  child: Text(
+                    'Add to Cart',
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(width: 8),
             // Buy Now Button
             Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Add to cart logic
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 10), backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child:Text(
-                      'Buy Now',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
+              child: Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Add to cart logic
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                )
+                  child: Text(
+                    'Buy Now',
+                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -236,23 +313,117 @@ class _DetailPageState extends State<DetailPage> {
                 'Recommended Product',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.arrow_forward))
+              IconButton(onPressed: () {}, icon: Icon(Icons.arrow_forward)),
             ],
           ),
         ),
-        Padding(
-          padding: EdgeInsets.all(10),
-          child: GridView.builder(
-              shrinkWrap: true,
-              primary: false,
-              itemCount: products.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 5,
-                  childAspectRatio: 0.70,
-                  crossAxisSpacing: 5),
-              itemBuilder: (context, index) => ItemCard(pro: products[index])),
+        SizedBox(
+          height: 220,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            itemCount: products.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ItemCard(pro: products[index]);
+            },
+          ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildReviewsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Reviews",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: showReviewDialog,
+                  icon: Icon(Icons.rate_review, color: Colors.blue),
+                  label: Text("Write Review"),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Obx(() {
+          final reviews = reviewController.reviews;
+          final visibleReviews =
+              showAllReviews.value ? reviews : reviews.take(5).toList();
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...visibleReviews.map(
+                (review) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Card(
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      width: double.infinity,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                review.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                DateFormat(
+                                  'yyyy-MM-dd || HH:mm',
+                                ).format(review.timestamp),
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          RatingBarIndicator(
+                            rating: review.rating,
+                            itemBuilder:
+                                (context, _) =>
+                                    const Icon(Icons.star, color: Colors.amber),
+                            itemCount: 5,
+                            itemSize: 20.0,
+                          ),
+                          Text(review.comment),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const Divider(),
+              if (reviews.length > 5)
+                Center(
+                  child: TextButton(
+                    onPressed:
+                        () => showAllReviews.value = !showAllReviews.value,
+                    child: Text(showAllReviews.value ? 'See Less' : 'See More'),
+                  ),
+                ),
+              const Divider(),
+            ],
+          );
+        }),
       ],
     );
   }

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:otokhi/Pages/bottom_navigation.dart';
-
-
+import 'package:otokhi/Pages/main_page.dart';
 
 class Splash_Screen extends StatefulWidget {
   const Splash_Screen({super.key});
@@ -21,7 +19,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     Timer(Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Home_Nav()),
+        MaterialPageRoute(builder: (context) => MainPage()),
       );
     });
   }

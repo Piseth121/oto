@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otokhi/pages/slideshow.dart';
+import 'package:otokhi/pages/top_selling_page.dart';
+import 'package:otokhi/widgets/slideshow.dart';
 import '../../constant_model/models.dart';
 import '../../constant_model/new_product.dart';
 import '../../constant_model/top_selling.dart';
@@ -8,6 +9,7 @@ import '../../widgets/itme_card_1.dart';
 import '../../widgets/search_page.dart';
 import '../controllers/cart_controller.dart';
 import 'detail_page.dart';
+import 'new_products_page.dart';
 
 class HomeProduct extends StatefulWidget {
   HomeProduct({super.key});
@@ -78,7 +80,9 @@ class _HomeProductState extends State<HomeProduct> {
                   'New Products',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                IconButton(onPressed: () {}, icon: Icon(Icons.arrow_forward)),
+                IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => NewProductsPage()));
+                }, icon: Icon(Icons.arrow_forward)),
               ],
             ),
           ),
@@ -94,7 +98,6 @@ class _HomeProductState extends State<HomeProduct> {
   }
 
   Widget _buildPro() {
-
     return SizedBox(
       height: 220,
       child: ListView.builder(
@@ -166,8 +169,7 @@ class _HomeProductState extends State<HomeProduct> {
                           Get.snackbar(
                             "Added to Cart",
                             "${item.name} has been added to your cart.",
-                            snackPosition: SnackPosition.BOTTOM,
-                            backgroundColor: Colors.green,);
+                          );
                         },
                         icon: Icon(
                           Icons.add_shopping_cart,
@@ -201,7 +203,9 @@ class _HomeProductState extends State<HomeProduct> {
                   'Top Selling',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                IconButton(onPressed: () {}, icon: Icon(Icons.arrow_forward)),
+                IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => TopSellingPage()));
+                }, icon: Icon(Icons.arrow_forward)),
               ],
             ),
           ),
@@ -281,7 +285,15 @@ class _HomeProductState extends State<HomeProduct> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        widget.cartController.addToCart(item); // 🛒 Add product
+                        Get.snackbar(
+                          "Added to Cart",
+                          "${item.name} has been added to your cart.",
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.green,
+                        );
+                      },
                       icon: Icon(
                         Icons.add_shopping_cart,
                         color: Colors.red,

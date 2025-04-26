@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:otokhi/Pages/profile.dart';
-
 import 'cart_page.dart';
-import 'categories.dart';
+import 'categories_page.dart';
 import 'home_page.dart';
-import 'messenger.dart';
+import 'messenger_page.dart';
 
 
-class Home_Nav extends StatefulWidget {
+class MainPage extends StatefulWidget {
 
-  const Home_Nav({super.key});
+  const MainPage({super.key});
 
   @override
-  State<Home_Nav> createState() => _Home_NavState();
+  State<MainPage> createState() => _MainPageState();
 }
 
-class _Home_NavState extends State<Home_Nav> {
+class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {

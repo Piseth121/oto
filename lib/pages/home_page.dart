@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:otokhi/pages/cart_page.dart';
 import '../constant_model/catigory.dart';
 import '../constant_model/new_product.dart';
@@ -7,10 +8,8 @@ import '../widgets/favorite.dart';
 import '../widgets/itme_card_1.dart';
 import 'home_product.dart';
 
-
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key,});
+class HomePage extends StatefulWidget{
+  HomePage({super.key,});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -56,9 +55,7 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(context, MaterialPageRoute(builder: (context) => FavoriteListScreen()));
             }, icon: Icon(Icons.favorite ,color: Colors.white,)),
             IconButton(onPressed: () {
-              setState(() {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
-              });
+              Get.to(() => CartPage());
             }, icon: Icon(Icons.shopping_cart, color: Colors.white,)),
           ],
           bottom: PreferredSize(
@@ -177,6 +174,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   Widget referenceMotor(){
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),

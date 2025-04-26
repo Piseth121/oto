@@ -17,6 +17,8 @@ class NewProduct {
     required this.productRating,
     this.quantity = 1,
   });
+
+  // From JSON
   factory NewProduct.fromJson(Map<String, dynamic> json) {
     return NewProduct(
       id: json['id'],
@@ -28,13 +30,15 @@ class NewProduct {
       productRating: json['productRating'],
     );
   }
-
+  // To JSON
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
     'image': image,
     'prices': prices,
     'quantity': quantity,
+    'description': description,
+    'productRating': productRating,
   };
 
 }

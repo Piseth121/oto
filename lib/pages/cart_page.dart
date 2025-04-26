@@ -6,7 +6,7 @@ import '../../widgets/checkout_page.dart';
 import '../../widgets/popular.dart';
 import '../../constant_model/new_product.dart';
 import '../controllers/cart_controller.dart';
-import 'categories.dart';
+import 'categories_page.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -67,7 +67,7 @@ class _CartPageState extends State<CartPage> {
                     width: double.infinity,
                     alignment: Alignment.topLeft,
                     color: Colors.transparent,
-                    child: Text("You're protected on PIISET.SHOP"),
+                    child: Text("You're protected on OTOKHI"),
                   ),
                 ),
                 Container(
@@ -101,7 +101,7 @@ class _CartPageState extends State<CartPage> {
                               Icons.directions_car_filled_outlined,
                               color: Colors.green,
                             ),
-                            Text("Fulfillment by PIISET.SHOP Logistics"),
+                            Text("Fulfillment by OTOKHI Logistics"),
                           ],
                         ),
                       ],
@@ -245,7 +245,6 @@ class _CartPageState extends State<CartPage> {
           );
         }
       }),
-
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         child: Row(

@@ -1,5 +1,6 @@
-import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:otokhi/pages/payment_page.dart';
 import 'address_page.dart';
 import '../../widgets/contact_us.dart';
@@ -7,6 +8,7 @@ import '../../widgets/favorite.dart';
 import '../../widgets/language.dart';
 import '../../widgets/notifications.dart';
 import '../../widgets/order_page.dart';
+import 'login_page.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -16,95 +18,76 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  void _showLogoutModal(BuildContext context) {
-    showModalBottomSheet(
+  void _showLogoutModal() {
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent, // makes the blur visible
-      builder: (BuildContext context) {
-        return Stack(
-          children: [
-            // Blurred background
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-              child: Container(
-                color: Colors.black.withOpacity(0.3),
-              ),
-            ),
-            // Modal content
-            DraggableScrollableSheet(
-              initialChildSize: 0.4,
-              maxChildSize: 0.4,
-              minChildSize: 0.3,
-              builder: (_, controller) => Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Logout",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                SizedBox(height: 15),
+                Text(
+                  "Sure you want to log out?",
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 25),
+                Row(
                   children: [
-                    Column(
-                      children: [
-                        Text(
-                          "Logout",
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red),
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          side: BorderSide(color: Colors.blue),
                         ),
-                        SizedBox(height: 15),
-                        Text(
-                          "Sure you want to log out?",
-                          style: TextStyle(fontSize: 16),
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(color: Colors.blue),
                         ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: StadiumBorder(),
-                                side: BorderSide(color: Colors.blue),
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(color: Colors.blue),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 15),
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: StadiumBorder(),
-                                backgroundColor: Colors.red,
-                              ),
-                              onPressed: () {
-                                // Add your logout logic here
-                                Navigator.pop(context);
-                              },
-                              child: Text("Yes. Logout",style: TextStyle(color: Colors.white),),
-                            ),
-                          ),
-                        ],
                       ),
-                    )
+                    ),
+                    SizedBox(width: 15),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: () {
+                          // Add your logout logic here
+                          Get.to(() => LoginPage()) ;
+
+                        },
+                        child: Text(
+                          "Yes. Logout",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            )
-          ],
+              ],
+            ),
+          ),
         );
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -247,7 +230,7 @@ class _ProfileState extends State<Profile> {
                   ListTile(
                     leading: Icon(Icons.logout, color: Colors.grey),
                     title: Text('Logout'),
-                    onTap: () => _showLogoutModal(context),
+                    onTap: () => _showLogoutModal(),
                   ),
                 ],
               ),

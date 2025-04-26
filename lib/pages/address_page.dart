@@ -45,6 +45,7 @@ class AddressesPage extends StatelessWidget {
               onTap: () {
                 controller.selectAddress(index);
                 Get.back(result: controller.addressList[index]); // Return selected address when tapped
+                controller.saveAddresses();
               },
 
               child: Card(

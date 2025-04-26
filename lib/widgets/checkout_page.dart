@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otokhi/controllers/cart_controller.dart';
 import 'package:otokhi/pages/payment_page.dart';
-import '../constant_model/top_selling.dart';
+import 'package:otokhi/widgets/order_page.dart';
+import '../controllers/address_controller.dart';
+import '../controllers/order_controller.dart';
 import 'add_bank_acc.dart';
 import 'add_credit_card.dart';
 import '../pages/address_page.dart';
@@ -16,26 +18,16 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   final CartController cartController = Get.put(CartController());
+  final AddressController addressController = Get.put(AddressController());
   final _formKey = GlobalKey<FormState>();
   int _selectedValue = 1;
   Map<String, dynamic>? selectedAddress;
   bool isAddressSelected = false;
-
-  final List<Map<String, dynamic>> cartItems = [
-    {'name': 'Product Name 1', 'price': 20.0, 'quantity': 2},
-    {'name': 'Product Name 2', 'price': 50.0, 'quantity': 1},
-    {'name': 'Product Name 3', 'price': 15.0, 'quantity': 1},
-  ];
-
-  String name = '';
-  String address = '';
-  String cardNumber = '';
-
-  double get total {
-    return topselling.fold(
-      0,
-      (sum, item) => sum + (item.prices * item.quantity.toDouble()),
-    );
+  @override
+  void initState() {
+    super.initState();
+    selectedAddress = addressController.selectedAddress;
+    isAddressSelected = selectedAddress != null;
   }
 
   void placeOrder() {
@@ -49,6 +41,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
 
+      final orderController = Get.find<OrderController>();
+      orderController.addOrder(
+          "Order from ${selectedAddress!['name']}",
+          cartController.total,
+          "Processing",
+          "${cartController.cartItems.first.image}"
+      );
+
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -57,25 +57,29 @@ class _CheckoutPageState extends State<CheckoutPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Thank you, ${selectedAddress!['name']}!'),
+              Text('Thank you, ${selectedAddress!['name']}!', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
               SizedBox(height: 8),
-              Text('Shipping to:'),
+              Text('Shipping to: ${selectedAddress!['name']}'),
               Text('${selectedAddress!['street']}, ${selectedAddress!['city']}'),
               SizedBox(height: 8),
               Row(
                 children: [
-                  Text('Order total: ',
-                   ),
-                   SizedBox(width: 8),
-                  Text('\$${total.toStringAsFixed(2)}',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16,color: Colors.red)),
+                  Text('Order total: '),
+                  SizedBox(width: 8),
+                  Text('\$${cartController.total.toStringAsFixed(2)}',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red)),
                 ],
               ),
             ],
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(context); // close dialog
+                Get.to(() => MyOrderPage());
+                Get.snackbar('Order Placed', 'Thank you for your order!', snackPosition: SnackPosition.BOTTOM);
+                // Optional: cartController.clearCart(); to empty cart
+              },
               child: Text('OK'),
             ),
           ],
@@ -83,6 +87,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       );
     }
   }
+
 
   void _handlePaymentMethodChange(int? value) {
     if (value == null) return;
@@ -119,82 +124,87 @@ class _CheckoutPageState extends State<CheckoutPage> {
         child: ListView(
           children: [
             // In your CheckoutPage's build method, update the shipping address section:
-            Container(
-              alignment: Alignment.topLeft,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Shipping Address',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                  isAddressSelected
-                      ? Card(
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-
-                              Text(
-                                selectedAddress!['name'] ?? '',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Spacer(),
-                              Text(selectedAddress!['phone'] ?? ''),
-                            ],
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            '${selectedAddress!['street'] ?? ''}, ${selectedAddress!['city'] ?? ''}, ${selectedAddress!['zip'] ?? ''}',
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              if (isAddressSelected)
-                                TextButton(
-                                  onPressed: () async {
-                                    final result = await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => AddressesPage()),
-                                    );
-                                    if (result != null) {
-                                      setState(() {
-                                        selectedAddress = result;
-                                      });
-                                    }
-                                  },
-                                  child: Text(
-                                    'Change Address',
-                                    style: TextStyle(color: Colors.blue),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ],
-                      ),
+            GestureDetector(
+              onTap: () {
+                cartController.saveCart();
+              },
+              child: Container(
+                alignment: Alignment.topLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Shipping Address',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
-                  )
-                      : ElevatedButton(
-                    onPressed: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => AddressesPage()),
-                      );
-                      if (result != null) {
-                        setState(() {
-                          selectedAddress = result;
-                          isAddressSelected = true;
-                        });
-                      }
-                    },
-                    child: Text('Select Shipping Address'),
-                  ),
-                ],
+                    SizedBox(height: 8),
+                    isAddressSelected
+                        ? Card(
+                      margin: EdgeInsets.symmetric(vertical: 8),
+                      child: Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+
+                                Text(
+                                  selectedAddress!['name'] ?? '',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Spacer(),
+                                Text(selectedAddress!['phone'] ?? ''),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              '${selectedAddress!['street'] ?? ''}, ${selectedAddress!['city'] ?? ''}, ${selectedAddress!['zip'] ?? ''}',
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                if (isAddressSelected)
+                                  TextButton(
+                                    onPressed: () async {
+                                      final result = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => AddressesPage()),
+                                      );
+                                      if (result != null) {
+                                        setState(() {
+                                          selectedAddress = result;
+                                        });
+                                      }
+                                    },
+                                    child: Text(
+                                      'Change Address',
+                                      style: TextStyle(color: Colors.blue),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                        : ElevatedButton(
+                      onPressed: () async {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddressesPage()),
+                        );
+                        if (result != null) {
+                          setState(() {
+                            selectedAddress = result;
+                            isAddressSelected = true;
+                          });
+                        }
+                      },
+                      child: Text('Select Shipping Address'),
+                    ),
+                  ],
+                ),
               ),
             ),
             Divider(),
@@ -213,7 +223,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ),
             Divider(),
             Text(
-              'Total: \$${total.toStringAsFixed(2)}',
+              'Total: \$${cartController.total.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),

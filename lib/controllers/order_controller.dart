@@ -1,24 +1,45 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../models/order_model.dart';
 
+
 class OrderController extends GetxController {
-  var isLoading = true.obs;
-  var orders = <OrderModel>[].obs;
+  final storage = GetStorage();
+  var orders = <Order>[].obs;
+  var isLoading = false.obs;
 
-  @override
-  void onInit() {
-    fetchOrders();
-    super.onInit();
+  void addOrder(String title, double total, String status, String image) {
+    final newOrder = Order(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      title: title,
+      total: total,
+      status: status,
+      image: image,
+    );
+    orders.add(newOrder);
+    saveOrders();
+  }
+  void saveOrders() {
+    final encoded = jsonEncode(orders.map((e) => e.toJson()).toList());
+    storage.write('orders', encoded);
   }
 
-  void fetchOrders() async {
-    await Future.delayed(Duration(seconds: 2)); // simulate loading
-    var orderResult = [
-      OrderModel(id: '001', title: 'Order #001', status: 'Delivered', total: 29.99),
-      OrderModel(id: '002', title: 'Order #002', status: 'Processing', total: 19.49),
-      OrderModel(id: '003', title: 'Order #003', status: 'Cancelled', total: 12.00),
-    ];
-    orders.assignAll(orderResult);
-    isLoading.value = false;
+  void updateOrderStatus(String orderId, String newStatus) {
+    int index = orders.indexWhere((o) => o.id == orderId);
+    if (index != -1) {
+      final oldOrder = orders[index];
+      orders[index] = Order(
+        id: oldOrder.id,
+        title: oldOrder.title,
+        total: oldOrder.total,
+        status: newStatus,
+        image: oldOrder.image,
+      );
+    }
   }
+
+
+
 }

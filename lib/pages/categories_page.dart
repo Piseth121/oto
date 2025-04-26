@@ -69,7 +69,7 @@ class _CategoriesState extends State<Categories> {
                       name_category[index],
                       style: TextStyle(
                         color: _selectedIndex == index ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold, fontFamily: "battambang",fontSize: 16,
+                        fontWeight: FontWeight.bold, fontFamily: "battambang",fontSize: 12,
                       ),
                     ),
                   ),

@@ -1,13 +1,32 @@
-class OrderModel {
+class Order {
   final String id;
   final String title;
-  final String status;
   final double total;
+  final String status;
+  final String image;
 
-  OrderModel({
+  Order({
     required this.id,
     required this.title,
-    required this.status,
     required this.total,
+    required this.status,
+    required this.image,
   });
+
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      id: json['id'],
+      title: json['title'],
+      total: json['total'],
+      status: json['status'],
+      image: json['image'],
+    );
+  }
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': title,
+    'total': total,
+    'status': status,
+    'image': image,
+  };
 }

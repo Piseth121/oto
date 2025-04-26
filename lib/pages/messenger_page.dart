@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otokhi/pages/login_page.dart';
-import 'package:otokhi/pages/user_page.dart';
 import '../constant_model/new_product.dart';
 import '../widgets/chat.dart';
 import '../widgets/itme_card_1.dart';

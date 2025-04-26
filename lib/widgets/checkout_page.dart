@@ -73,14 +73,18 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ],
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // close dialog
-                Get.to(() => MyOrderPage());
-                Get.snackbar('Order Placed', 'Thank you for your order!', snackPosition: SnackPosition.BOTTOM);
-                // Optional: cartController.clearCart(); to empty cart
-              },
-              child: Text('OK'),
+            Row(
+              children: [
+                TextButton(onPressed: (){}, child: Text("cancel")),
+                TextButton(
+                  onPressed: () {
+                    Get.to(() => MyOrderPage());
+                    Get.snackbar('Order Placed', 'Thank you for your order!', snackPosition: SnackPosition.BOTTOM);
+                    // Optional: cartController.clearCart(); to empty cart
+                  },
+                  child: Text('OK'),
+                ),
+              ],
             ),
           ],
         ),

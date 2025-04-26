@@ -12,7 +12,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Login"),centerTitle: true,),
+      appBar: AppBar(title: Text("Sign in"),centerTitle: true,),
       backgroundColor: Colors.grey[100],
       body: Padding(
         padding: const EdgeInsets.only(top: 100),
@@ -84,9 +84,16 @@ class LoginPage extends StatelessWidget {
                     Text('Sign in with Google'),
                   ],
                 ),),
+              SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: () {
-                }, label: Text('Sign in FaceBook'),),
+                }, label: Row(
+                  children: [
+                    Image.asset('assets/icons/facebook_logo.png',height: 20,width: 20,fit: BoxFit.cover,),
+                    SizedBox(width: 50,),
+                    Text('Sign in FaceBook'),
+                  ],
+                ),),
             ],
           ),
         ),

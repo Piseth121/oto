@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:otokhi/Pages/main_page.dart';
+import 'package:otokhi/pages/get_started_page.dart';
 
 class Splash_Screen extends StatefulWidget {
   const Splash_Screen({super.key});
@@ -19,7 +19,7 @@ class _Splash_ScreenState extends State<Splash_Screen> {
     Timer(Duration(seconds: 5), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MainPage()),
+        MaterialPageRoute(builder: (context) => GetStartedPage()),
       );
     });
   }
@@ -35,7 +35,8 @@ class _Splash_ScreenState extends State<Splash_Screen> {
                 child: Image.asset("assets/icons/logo.png", fit: BoxFit.cover,)),
             SizedBox(height: 20,),
             Text("Welcome to OTOKHI", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-
+            SizedBox(height: 20,),
+            CircularProgressIndicator(),
         ],
         ),
       ),

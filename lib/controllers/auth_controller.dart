@@ -10,7 +10,7 @@ class AuthController extends GetxController {
     Get.offAllNamed('/home');
   }
 
-  void signUp(String email, String password) {
+  void signUp(String email, String password, String name) {
     // Simulate signup
     print('Signing up with $email');
     isLoggedIn.value = true;

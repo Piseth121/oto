@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otokhi/Pages/detail_page.dart';
 import 'package:otokhi/pages/new_products_page.dart';
 import 'package:otokhi/pages/product_detail.dart';
 import 'package:otokhi/pages/recommended_page.dart';

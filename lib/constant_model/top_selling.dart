@@ -1,7 +1,7 @@
-import 'models.dart' show NewProduct;
+import 'models.dart' show Product;
 
-final List<NewProduct> topselling = [
-  NewProduct(
+final List<Product> topselling = [
+  Product(
     id: 1,
     name: 'Product 9',
     image: 'assets/images/product09.png',
@@ -10,7 +10,7 @@ final List<NewProduct> topselling = [
     productRating: 4.5,
     quantity: 1,
   ),
-  NewProduct(
+  Product(
     id: 2,
     name: 'Product 8',
     image: 'assets/images/product08.png',
@@ -19,7 +19,7 @@ final List<NewProduct> topselling = [
     productRating: 4.5,
     quantity: 2,
   ),
-  NewProduct(
+  Product(
     id: 3,
     name: 'Product 7',
     image: 'assets/images/product07.png',
@@ -28,7 +28,7 @@ final List<NewProduct> topselling = [
     productRating: 4.5,
     quantity: 3,
   ),
-  NewProduct(
+  Product(
     id: 4,
     name: 'Product 6',
     image: 'assets/images/product06.png',
@@ -37,7 +37,7 @@ final List<NewProduct> topselling = [
     productRating: 4.5,
     quantity: 4,
   ),
-  NewProduct(
+  Product(
     id: 5,
     name: 'Product 5',
     image: 'assets/images/product05.png',
@@ -46,7 +46,7 @@ final List<NewProduct> topselling = [
     productRating: 4.5,
     quantity: 5,
   ),
-  NewProduct(
+  Product(
     id: 6,
     name: 'Product 4',
     image: 'assets/images/product04.png',
@@ -55,7 +55,7 @@ final List<NewProduct> topselling = [
     productRating: 4.5,
     quantity: 6,
   ),
-  NewProduct(
+  Product(
     id: 7,
     name: 'Product 3',
     image: 'assets/images/product03.png',

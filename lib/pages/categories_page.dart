@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../constant_model/catigory.dart';
-import '../../constant_model/new_product.dart';
 import '../../constant_model/top_selling.dart';
 import '../../widgets/item_card_2.dart';
 
@@ -110,7 +109,7 @@ class _CategoriesState extends State<Categories> {
           child: Text("Recommendations", style: TextStyle(fontWeight: FontWeight.bold),),
         ),
         GridView.builder(
-          itemCount: products.length,
+          itemCount: topselling.length,
           shrinkWrap: true,
             primary: false,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -119,7 +118,7 @@ class _CategoriesState extends State<Categories> {
               crossAxisSpacing: 5,
               childAspectRatio: 0.70,
         ),
-            itemBuilder: (context, index) => ItemCard2(product2: products[index])),
+            itemBuilder: (context, index) => ItemCard2(product2: topselling[index])),
       ],
     );
   }

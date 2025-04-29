@@ -1,4 +1,5 @@
-class Products {
+
+class Recommendeds {
   int? id;
   String? code;
   String? name;
@@ -11,9 +12,9 @@ class Products {
   int? categoryId;
   List<dynamic>? images;
 
-  Products({this.id, this.code, this.name, this.nameEn, this.uom, this.price, this.description, this.stockQty, this.category, this.categoryId, this.images});
+  Recommendeds({this.id, this.code, this.name, this.nameEn, this.uom, this.price, this.description, this.stockQty, this.category, this.categoryId, this.images});
 
-  Products.fromJson(Map<String, dynamic> json) {
+  Recommendeds.fromJson(Map<String, dynamic> json) {
     id = json["id"];
     code = json["code"];
     name = json["name"];
@@ -24,7 +25,7 @@ class Products {
     stockQty = (json["stockQty"] as num?)?.toInt();
     category = json["category"];
     categoryId = json["categoryId"];
-    images = json["images"] is List ? json["images"] : [];
+    images = json["images"] ?? [];
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,6 +8,12 @@ class OrderController extends GetxController {
   final storage = GetStorage();
   var orders = <Order>[].obs;
   var isLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadOrders();
+  }
 
   void addOrder(String title, double total, String status, String image) {
     final newOrder = Order(
@@ -22,8 +27,15 @@ class OrderController extends GetxController {
     saveOrders();
   }
   void saveOrders() {
-    final encoded = jsonEncode(orders.map((e) => e.toJson()).toList());
-    storage.write('orders', encoded);
+    List<Map<String, dynamic>> orderList = orders.map((order) => order.toJson()).toList();
+    storage.write('orders', orderList);
+  }
+  void loadOrders() {
+    List<dynamic>? orderList = storage.read('orders');
+    if (orderList != null) {
+      orders.assignAll(orderList.map((order) => Order.fromJson(order)).toList());
+    }
+    isLoading.value = false;
   }
 
   void updateOrderStatus(String orderId, String newStatus) {

@@ -1,5 +1,5 @@
 
-class NewProduct {
+class Product {
   final int id;
   final String name;
   final String image;
@@ -8,7 +8,7 @@ class NewProduct {
   final double productRating;
   int quantity;
 
-  NewProduct({
+  Product({
     required this.id,
     required this.name,
     required this.image,
@@ -19,8 +19,8 @@ class NewProduct {
   });
 
   // From JSON
-  factory NewProduct.fromJson(Map<String, dynamic> json) {
-    return NewProduct(
+  factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
       id: json['id'],
       name: json['name'],
       image: json['image'],

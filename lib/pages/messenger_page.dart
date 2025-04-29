@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otokhi/pages/login_page.dart';
-import '../constant_model/new_product.dart';
+import 'package:otokhi/Pages/login_page.dart';
+import 'package:otokhi/constant_model/top_selling.dart';
 import '../widgets/chat.dart';
 import '../widgets/itme_card_1.dart';
 import '../widgets/notifications.dart';
@@ -152,13 +152,13 @@ class _MessengerState extends State<Messenger> {
       child: GridView.builder(
           shrinkWrap: true,
           primary: false,
-          itemCount: products.length,
+          itemCount: topselling.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 5,
               childAspectRatio: 0.70,
               crossAxisSpacing: 5),
-          itemBuilder: (context, index) => ItemCard(pro: products[index])),
+          itemBuilder: (context, index) => ItemCard(pro: topselling[index])),
     );
 
   }

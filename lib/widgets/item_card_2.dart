@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import '../pages/detail_page.dart';
-import '../constant_model/models.dart';
+import 'package:otokhi/constant_model/models.dart';
+
+import '../Pages/detail_page.dart';
+
 
 
 class ItemCard2 extends StatelessWidget {
-  final NewProduct product2;
+  final Product product2;
   const ItemCard2({super.key,required this.product2});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(proData: product2)));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>DetailPage(proData: product2)));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

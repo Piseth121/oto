@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 import '../constant_model/models.dart';
 
 class FavoriteController extends GetxController {
-  var favoriteItems = <NewProduct>[].obs;
+  var favoriteItems = <Product>[].obs;
 
-  void toggleFavorite(NewProduct product) {
+  void toggleFavorite(Product product) {
     if (favoriteItems.contains(product)) {
       favoriteItems.remove(product);
     } else {
@@ -12,7 +12,7 @@ class FavoriteController extends GetxController {
     }
   }
 
-  bool isFavorite(NewProduct product) {
+  bool isFavorite(Product product) {
     return favoriteItems.contains(product);
   }
 }

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:otokhi/Pages/detail_page.dart';
+import 'package:otokhi/pages/new_products_page.dart';
+import 'package:otokhi/pages/product_detail.dart';
+import 'package:otokhi/pages/recommended_page.dart';
 import 'package:otokhi/pages/top_selling_page.dart';
+import 'package:otokhi/widgets/search_page.dart';
 import 'package:otokhi/widgets/slideshow.dart';
-import '../../constant_model/models.dart';
-import '../../constant_model/new_product.dart';
-import '../../constant_model/top_selling.dart';
-import '../../widgets/itme_card_1.dart';
-import '../../widgets/search_page.dart';
 import '../controllers/cart_controller.dart';
-import 'detail_page.dart';
-import 'new_products_page.dart';
+import '../controllers/product_controller.dart';
+import '../widgets/loading_skeleton.dart';
+
 
 class HomeProduct extends StatefulWidget {
   HomeProduct({super.key});
+
   final CartController cartController = Get.put(CartController());
 
   @override
@@ -20,6 +22,7 @@ class HomeProduct extends StatefulWidget {
 }
 
 class _HomeProductState extends State<HomeProduct> {
+  final ProductController controller = Get.put(ProductController());
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class _HomeProductState extends State<HomeProduct> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        padding: EdgeInsets.only(left: 10, right: 10),
+        padding: EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
@@ -50,298 +53,170 @@ class _HomeProductState extends State<HomeProduct> {
         child: TextField(
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
-            labelStyle: TextStyle(fontSize: 10, color: Colors.black26),
+            border: InputBorder.none,
             hintText: "Search here",
           ),
-          obscureText: false,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SearchPage()),
-            );
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage())),
         ),
       ),
     );
   }
 
   Widget _newProducts() {
-    return Container(
-      color: Colors.white,
-      // height: 300,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'New Products',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                IconButton(onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => NewProductsPage()));
-                }, icon: Icon(Icons.arrow_forward)),
-              ],
-            ),
-          ),
-          SizedBox(height: 5),
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            child: Row(children: [_buildPro()]),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPro() {
-    return SizedBox(
-      height: 220,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          return _buildNewProItem(products[index]);
-        },
-      ),
-    );
-  }
-
-  Widget _buildNewProItem(NewProduct item) {
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 5),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => DetailPage(proData: item)),
-          );
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.41,
-          child: Card(
-            elevation: 4,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Container(
-                    // width: MediaQuery.of(context).size.width*0.41,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: AssetImage(item.image),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10),
-                  child: Text(
-                    item.name,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "\$${item.prices}",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          widget.cartController.addToCart(item); // 🛒 Add product
-                          Get.snackbar(
-                            "Added to Cart",
-                            "${item.name} has been added to your cart.",
-                          );
-                        },
-                        icon: Icon(
-                          Icons.add_shopping_cart,
-                          color: Colors.red,
-                          size: 18,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return _section("New Products", () => NewProductsPage(), controller.newProducts);
   }
 
   Widget _topSelling() {
-    return Container(
-      color: Colors.white,
-      // height: 300,
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Top Selling',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                IconButton(onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => TopSellingPage()));
-                }, icon: Icon(Icons.arrow_forward)),
-              ],
-            ),
-          ),
-          SizedBox(height: 5),
-          SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            scrollDirection: Axis.horizontal,
-            child: Row(children: [_buildTop()]),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTop() {
-    return SizedBox(
-      height: 220,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        itemCount: topselling.length,
-        itemBuilder: (context, index) {
-          return _buildNewTopItem(topselling[index]);
-        },
-      ),
-    );
-  }
-
-  Widget _buildNewTopItem(NewProduct item) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 5),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => DetailPage(proData: item)),
-          );
-        },
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.41,
-          child: Card(
-            elevation: 4,
-            clipBehavior: Clip.antiAliasWithSaveLayer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Container(
-                    // width: MediaQuery.of(context).size.width*0.41,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: AssetImage(item.image),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 10),
-                  child: Text(
-                    item.name,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "\$${item.prices}",
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        widget.cartController.addToCart(item); // 🛒 Add product
-                        Get.snackbar(
-                          "Added to Cart",
-                          "${item.name} has been added to your cart.",
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.green,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.add_shopping_cart,
-                        color: Colors.red,
-                        size: 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+    return _section("Top Selling", () => TopSellingPage(), controller.topSelling);
   }
 
   Widget _buildForYou() {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Recommended For You',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.arrow_forward)),
-            ],
-          ),
-        ),
+        _sectionHeader("Recommended For You", () => RecommendedPage()),
         Padding(
           padding: EdgeInsets.all(10),
-          child: GridView.builder(
-            shrinkWrap: true,
-            primary: false,
-            itemCount: products.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 5,
-              childAspectRatio: 0.70,
-              crossAxisSpacing: 5,
-            ),
-            itemBuilder: (context, index) => ItemCard(pro: products[index]),
-          ),
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return GridView.builder(
+                shrinkWrap: true,
+                primary: false,
+                itemCount: 4,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.70, crossAxisSpacing: 5, mainAxisSpacing: 5),
+                itemBuilder: (context, index) => ShimmerBox(width: double.infinity, height: 220),
+              );
+            }
+            return GridView.builder(
+              shrinkWrap: true,
+              primary: false,
+              itemCount: controller.recommendeds.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.70, crossAxisSpacing: 5, mainAxisSpacing: 5),
+              itemBuilder: (context, index) => _buildItemCard(controller.recommendeds[index]),
+            );
+          }),
         ),
       ],
     );
+  }
+
+  Widget _section(String title, Widget Function() nextPage, var list) {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          _sectionHeader(title, nextPage),
+          SizedBox(height: 5),
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return Row(children: List.generate(4, (index) => ShimmerBox(width: 150, height: 220)));
+              }
+              return Row(
+                children: List.generate(
+                  list.length,
+                      (index) => _buildItemCard(list[index]),
+                ),
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _sectionHeader(String title, Widget Function()? nextPage) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          if (nextPage != null)
+            IconButton(
+              icon: Icon(Icons.arrow_forward),
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => nextPage())),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildItemCard(item) {
+    return Obx(() {
+      if (widget.cartController.isLoading.value) {
+        return ShimmerBox(width: 150, height: 220);
+      }
+      return Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPageP(proData: item)));
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.41,
+            height: 220, // Ensure height is fixed to avoid layout errors
+            child: Card(
+              elevation: 4,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: item.images != null && item.images.isNotEmpty
+                              ? NetworkImage(item.images[0])
+                              : AssetImage('assets/images/no_image.png') as ImageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 10),
+                    child: Text(
+                      item.name,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "battambang"),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "\$${item.price}",
+                          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            widget.cartController.addToCart(item);
+                            Get.snackbar("Added to Cart", "${item.name} has been added to your cart.",
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Colors.grey.withOpacity(0.7),
+                                colorText: Colors.white);
+                          },
+                          icon: Icon(Icons.add_shopping_cart, color: Colors.red, size: 18),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    });
   }
 }

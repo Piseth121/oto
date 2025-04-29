@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:otokhi/constant_model/models.dart';
+import '../Pages/detail_page.dart';
 import '../controllers/cart_controller.dart';
-import '../pages/detail_page.dart';
-import '../constant_model/models.dart';
+
+
 
 class ItemCard extends StatelessWidget {
-  final NewProduct pro;
+  final Product pro;
+
   ItemCard({super.key, required this.pro});
+
   final CartController cartController = Get.put(CartController());
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => DetailPage(proData: pro)),
-        );
-      },
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => DetailPage(proData: pro)),
+      ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.41,
         child: Card(
@@ -39,20 +41,23 @@ class ItemCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Text(pro.name),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  pro.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              // SizedBox(height: 5,),
               Padding(
-                padding: const EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "\$${pro.prices}",
-                      style: TextStyle(
+                      "\$${pro.prices.toStringAsFixed(2)}",
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.red,
                       ),
@@ -60,13 +65,15 @@ class ItemCard extends StatelessWidget {
                     IconButton(
                       onPressed: () {
                         cartController.addToCart(pro);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Added to cart'),
-                          ),
+                        Get.snackbar(
+                          "Added to Cart",
+                          "${pro.name} has been added.",
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.green.withOpacity(0.7),
+                          colorText: Colors.white,
                         );
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.add_shopping_cart,
                         color: Colors.red,
                         size: 18,

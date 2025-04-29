@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otokhi/pages/cart_page.dart';
 import '../constant_model/catigory.dart';
-import '../constant_model/new_product.dart';
 import '../constant_model/top_selling.dart';
 import '../widgets/favorite.dart';
 import '../widgets/itme_card_1.dart';
@@ -129,7 +128,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Padding(padding: const EdgeInsets.all(10),
             child: GridView.builder(
-              itemCount: products.length,
+              itemCount: topselling.length,
                 shrinkWrap: true,
                 primary: false,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -138,7 +137,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisSpacing: 5,
               childAspectRatio: 0.70,
             ),
-                itemBuilder: (context, index) => ItemCard(pro: products[index])),
+                itemBuilder: (context, index) => ItemCard(pro: topselling[index])),
           )
         ],
       ),

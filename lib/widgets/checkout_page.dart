@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otokhi/controllers/cart_controller.dart';
 import 'package:otokhi/pages/payment_page.dart';
-import 'package:otokhi/widgets/order_page.dart';
 import '../controllers/address_controller.dart';
 import '../controllers/order_controller.dart';
+import '../pages/order_page.dart';
 import 'add_bank_acc.dart';
 import 'add_credit_card.dart';
 import '../pages/address_page.dart';
@@ -67,20 +67,24 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   Text('Order total: '),
                   SizedBox(width: 8),
                   Text('\$${cartController.total.toStringAsFixed(2)}',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red)),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.green)),
                 ],
               ),
             ],
           ),
           actions: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){}, child: Text("cancel")),
+                TextButton(onPressed: (){
+                  Get.back();
+                }, child: Text("cancel",style: TextStyle(color: Colors.red[500]),)),
                 TextButton(
                   onPressed: () {
                     Get.to(() => MyOrderPage());
                     Get.snackbar('Order Placed', 'Thank you for your order!', snackPosition: SnackPosition.BOTTOM);
                     // Optional: cartController.clearCart(); to empty cart
+                    cartController.clearCart();
                   },
                   child: Text('OK'),
                 ),

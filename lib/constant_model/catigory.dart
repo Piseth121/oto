@@ -1,10 +1,10 @@
 
 
-import 'models.dart' show NewProduct;
+import 'models.dart' show Product;
 
-final List<NewProduct> catigory = [
+final List<Product> catigory = [
 
-  NewProduct(
+  Product(
       id: 16,
       name: 'Product Name',
       image: 'assets/images/15.jpg',
@@ -12,7 +12,7 @@ final List<NewProduct> catigory = [
       description: '',
       productRating: 1.5, quantity: 1,
   ),
-  NewProduct(
+  Product(
     id: 17,
       name: 'Product Name',
       image: 'assets/images/1.jpg',
@@ -20,7 +20,7 @@ final List<NewProduct> catigory = [
       description: '',
       productRating: 1.5, quantity: 1,
   ),
-  NewProduct(
+  Product(
       id: 18,
       name: 'Product Name',
       image: 'assets/images/2.jpg',
@@ -28,7 +28,7 @@ final List<NewProduct> catigory = [
       description: '',
       productRating: 1.5, quantity: 1,
   ),
-  NewProduct(
+  Product(
       id: 19,
       name: 'Product Name',
       image: 'assets/images/3.jpg',
@@ -36,14 +36,14 @@ final List<NewProduct> catigory = [
       description: '',
       productRating: 1.5, quantity: 1,
   ),
-  NewProduct(
+  Product(
       id: 20,
       name: 'Product Name',
       image: 'assets/images/4.jpg',
       prices: 889,
       description: '',
       productRating: 1.5, quantity: 1,
-  ),NewProduct(
+  ),Product(
       id: 21,
       name: 'Product Name',
       image: 'assets/images/5.jpg',
@@ -51,7 +51,7 @@ final List<NewProduct> catigory = [
       description: '',
       productRating: 1.5, quantity: 1,
   ),
-  NewProduct(
+  Product(
       id: 22,
       name: 'Product Name',
       image: 'assets/images/6.jpg',
@@ -59,14 +59,14 @@ final List<NewProduct> catigory = [
       description: '',
       productRating: 1.5, quantity: 1,
   ),
-  NewProduct(
+  Product(
     id: 23,
       name: 'Product Name',
       image: 'assets/images/7.jpg',
       prices: 889,
       description: '',
       productRating: 1.5, quantity: 1,
-  ),NewProduct(
+  ),Product(
     id: 24,
       name: 'Product Name',
       image: 'assets/images/8.jpg',

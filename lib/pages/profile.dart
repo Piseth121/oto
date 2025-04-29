@@ -7,8 +7,8 @@ import '../../widgets/contact_us.dart';
 import '../../widgets/favorite.dart';
 import '../../widgets/language.dart';
 import '../../widgets/notifications.dart';
-import '../../widgets/order_page.dart';
 import 'login_page.dart';
+import 'order_page.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

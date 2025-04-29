@@ -4,7 +4,6 @@ import '../../constant_model/top_selling.dart';
 import '../../widgets/all.dart';
 import '../../widgets/checkout_page.dart';
 import '../../widgets/popular.dart';
-import '../../constant_model/new_product.dart';
 import '../controllers/cart_controller.dart';
 import 'categories_page.dart';
 
@@ -299,14 +298,14 @@ class _CartPageState extends State<CartPage> {
       child: GridView.builder(
         shrinkWrap: true,
         primary: false,
-        itemCount: products.length,
+        itemCount: topselling.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 10,
           childAspectRatio: 0.80,
           crossAxisSpacing: 10,
         ),
-        itemBuilder: (context, index) => Popular(pop: products[index]),
+        itemBuilder: (context, index) => Popular(pop: topselling[index]),
       ),
     );
   }

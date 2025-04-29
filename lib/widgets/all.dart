@@ -7,7 +7,7 @@ import '../controllers/cart_controller.dart';
 
 
 class ItemAll extends StatelessWidget {
-  final NewProduct pros;
+  final Product pros;
   ItemAll({super.key,required this.pros});
   final CartController cartController = Get.put(CartController());
 
@@ -15,7 +15,7 @@ class ItemAll extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(proData: pros)));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> DetailPage(proData: pros,)));
       },
       child: Container(
         width: 150,

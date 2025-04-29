@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otokhi/pages/product_detail.dart';
-
 import '../controllers/product_controller.dart';
-
-
-class TopSellingPage extends StatelessWidget {
+class RecommendedPage extends StatelessWidget {
   final ProductController controller = Get.find<ProductController>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Top Selling Products')),
+      appBar: AppBar(title: Text('New Products')),
       body: Obx(() {
         if (controller.isLoading.value) {
           return Center(child: CircularProgressIndicator());
@@ -24,9 +21,9 @@ class TopSellingPage extends StatelessWidget {
             mainAxisSpacing: 10,
             childAspectRatio: 0.7,
           ),
-          itemCount: controller.topSelling.length,
+          itemCount: controller.newProducts.length,
           itemBuilder: (context, index) {
-            var item = controller.topSelling[index];
+            var item = controller.newProducts[index];
             return GestureDetector(
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailPageP(proData: item))),
               child: Card(

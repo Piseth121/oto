@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import '../pages/detail_page.dart';
-import '../constant_model/models.dart';
-
+import 'package:otokhi/constant_model/models.dart';
+import '../Pages/detail_page.dart';
 class Popular extends StatelessWidget {
-  final NewProduct pop;
+  final Product pop;
   const Popular({super.key, required this.pop});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => DetailPage(proData: pop)),
-        );
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => DetailPage(proData: pop)));
       },
       child: Card(
         elevation: 4,
@@ -32,7 +30,7 @@ class Popular extends StatelessWidget {
             Text(pop.name),
             SizedBox(height: 5),
             Text(
-              "\$${pop.prices}",
+              "\$${pop.prices.toStringAsFixed(2)}",
               style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
             ),
           ],

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otokhi/Pages/detail_page.dart';
+
 import 'package:otokhi/pages/product_detail.dart';
 import '../controllers/product_controller.dart';
-import 'detail_page.dart';
+
 
 class NewProductsPage extends StatelessWidget {
   final ProductController controller = Get.find<ProductController>();

@@ -10,7 +10,6 @@ import '../controllers/cart_controller.dart';
 import '../controllers/product_controller.dart';
 import '../widgets/loading_skeleton.dart';
 
-
 class HomeProduct extends StatefulWidget {
   HomeProduct({super.key});
 
@@ -62,11 +61,11 @@ class _HomeProductState extends State<HomeProduct> {
   }
 
   Widget _newProducts() {
-    return _section("New Products", () => NewProductsPage(), controller.newProducts);
+    return _section("New Products", () => NewProductsPage(), controller.newProducts); // ✅ FIXED
   }
 
   Widget _topSelling() {
-    return _section("Top Selling", () => TopSellingPage(), controller.topSelling);
+    return _section("Top Selling", () => TopSellingPage(), controller.topSolds); // ✅ FIXED
   }
 
   Widget _buildForYou() {
@@ -154,11 +153,11 @@ class _HomeProductState extends State<HomeProduct> {
         padding: const EdgeInsets.only(left: 5),
         child: InkWell(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPageP(proData: item)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => DetailPage(proData: item)));
           },
           child: Container(
             width: MediaQuery.of(context).size.width * 0.41,
-            height: 220, // Ensure height is fixed to avoid layout errors
+            height: 220,
             child: Card(
               elevation: 4,
               clipBehavior: Clip.antiAliasWithSaveLayer,

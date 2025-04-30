@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../constant_model/models.dart';
+import '../models/product_model.dart';
 
 class FavoriteController extends GetxController {
   var favoriteItems = <Product>[].obs;

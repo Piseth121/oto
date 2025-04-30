@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:otokhi/pages/product_detail.dart';
+import 'package:otokhi/Pages/product_detail.dart';
 import '../controllers/product_controller.dart';
 
 
@@ -28,7 +27,7 @@ class NewProductsPage extends StatelessWidget {
           itemBuilder: (context, index) {
             var item = controller.newProducts[index];
             return GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailPageP(proData: item))),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailPage(proData: item))),
               child: Card(
                 elevation: 4,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

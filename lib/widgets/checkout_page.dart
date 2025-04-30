@@ -19,6 +19,7 @@ class CheckoutPage extends StatefulWidget {
 class _CheckoutPageState extends State<CheckoutPage> {
   final CartController cartController = Get.put(CartController());
   final AddressController addressController = Get.put(AddressController());
+  final OrderController orderController = Get.put(OrderController());
   final _formKey = GlobalKey<FormState>();
   int _selectedValue = 1;
   Map<String, dynamic>? selectedAddress;
@@ -46,7 +47,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
           "Order from ${selectedAddress!['name']}",
           cartController.total,
           "Processing",
-          "${cartController.cartItems.first.image}"
+          cartController.cartItems.map((item) => item.images[0]).toList()
       );
 
       showDialog(
@@ -221,26 +222,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             ...cartController.cartItems.map(
-              (item) => ListTile(
-                leading: Image.asset(item.image, width:50, height: 50, fit: BoxFit.cover),
-                title: Text('${item.name} (x${item.quantity})'),
-                trailing: Text(
-                  '\$${(item.prices * item.quantity.toDouble()).toStringAsFixed(2)}',
+              (item) => Card(
+                child: ListTile(
+                  leading: item.images.isEmpty? Image.asset('assets/images/no_image.png', width: 80, height: 80, fit: BoxFit.cover) : Image.network(item.images[0], width: 50, height: 60, fit: BoxFit.cover),
+                  title: Text('${item.name} (x${item.quantity})', style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "battambang")),
+                  trailing: Text(
+                    '\$${(item.price * item.quantity.toDouble()).toStringAsFixed(2)}',style: TextStyle(color: Colors.red),
+                  ),
                 ),
               ),
             ),
             Divider(),
-            Text(
-              'Total: \$${cartController.total.toStringAsFixed(2)}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              children: [
+                Text(
+                  'Total: ',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text('\$${cartController.total.toStringAsFixed(2)}', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green)),
+              ],
             ),
             SizedBox(height: 20),
+            Divider(),
+            Text('Select Payment Method', style: TextStyle(fontSize: 18)),
             Form(
               key: _formKey,
               child: Column(
                 children: [
-                  Text('Payment Methods', style: TextStyle(fontSize: 18)),
-                  SizedBox(height: 10),
                   ListTile(
                     leading: Radio<int>(
                       value: 1,

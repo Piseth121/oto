@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otokhi/widgets/accessories_page.dart';
-import 'package:otokhi/widgets/geared_beam_trolley.dart';
+
 
 class SearchController extends GetxController {
   var query = ''.obs;
@@ -57,9 +56,7 @@ class SearchPage extends StatelessWidget {
                       onTap: () {
                         final item = results[index];
                         if (item == 'គ្រឿងប្រដាប់ជាង') {
-                          Get.to(() => AccessoriesPage());
                         } else if (item == 'ច្រវាក់និងកៅឡាក់') {
-                          Get.to(() => GearedBeamTrolley());
                         } else {
                           // Default or fallback
                           Get.snackbar('Not found', 'No page set for this item');

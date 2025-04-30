@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import '../constant_model/models.dart';
+import '../models/product_model.dart';
 
 class CartController extends GetxController {
   var cartItems = <Product>[].obs;
@@ -58,7 +58,7 @@ class CartController extends GetxController {
   double get total {
     return cartItems.fold(
       0.0,
-      (sum, item) => sum + (item.prices * item.quantity),
+      (sum, item) => sum + (item.price * item.quantity),
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:otokhi/pages/splach_screen.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/cart_controller.dart';
+import 'controllers/favorite_controller.dart';
 import 'controllers/order_controller.dart';
 import 'controllers/product_controller.dart';
 
@@ -14,6 +15,7 @@ void main() async {
   Get.put(AuthController());
   Get.put(OrderController());
   Get.put(ProductController());
+  Get.put(FavoriteController());
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }

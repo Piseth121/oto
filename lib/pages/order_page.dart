@@ -123,7 +123,9 @@ class _MyOrderPageState extends State<MyOrderPage> with SingleTickerProviderStat
               children: [
                 ListTile(
                   leading: CircleAvatar(
-                    backgroundImage: AssetImage(order.image),
+                    backgroundImage: NetworkImage(
+                      order.images.isNotEmpty ? order.images[0] : AssetImage('assets/images/no_image.png').assetName,
+                    ),
                   ),
                   title: Text(order.title),
                   subtitle: Text("ID: ${order.id}"),
@@ -145,6 +147,7 @@ class _MyOrderPageState extends State<MyOrderPage> with SingleTickerProviderStat
                       children: [
                         Row(
                           children: [
+
                             Text(
                               "Status:",
                               style: TextStyle(color: Colors.black),

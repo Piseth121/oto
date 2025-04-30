@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Pages/cart_page.dart';
 import '../controllers/cart_controller.dart';
-import '../controllers/favotite_controller.dart';
+import '../controllers/favorite_controller.dart';
 
 class FavoriteListScreen extends StatelessWidget {
   final FavoriteController favoriteController = Get.put(FavoriteController());
@@ -29,7 +29,7 @@ class FavoriteListScreen extends StatelessWidget {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset(item.image, width: 100, height: 100, fit: BoxFit.cover),
+                        item.images.isEmpty? Image.asset('assets/images/no_image.png', width: 100, height: 100, fit: BoxFit.cover) : Image.network(item.images[0], width: 100, height: 100, fit: BoxFit.cover),
                         SizedBox(width: 10),
                         Expanded(
                           child: Column(
@@ -37,11 +37,11 @@ class FavoriteListScreen extends StatelessWidget {
                             children: [
                               Text(item.name, style: TextStyle(fontWeight: FontWeight.bold)),
                               SizedBox(height: 5),
-                              Text(item.prices.toString(), style: TextStyle(color: Colors.green)),
+                              Text(item.price.toString(), style: TextStyle(color: Colors.green)),
                               Row(
                                 children: [
                                   Icon(Icons.star, color: Colors.orange, size: 16),
-                                  Text('${item.productRating} (${item.prices.toString()})'),
+                                  // Text('${item.productRating} (${item.price.toString()})'),
                                 ],
                               ),
                               Text(item.quantity.toString()),

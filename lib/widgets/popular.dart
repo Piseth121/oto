@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:otokhi/constant_model/models.dart';
-import '../Pages/detail_page.dart';
+import '../Pages/product_detail.dart';
+import '../models/product_model.dart';
 class Popular extends StatelessWidget {
   final Product pop;
   const Popular({super.key, required this.pop});
@@ -22,7 +22,10 @@ class Popular extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(image: AssetImage(pop.image)),
+                  image: DecorationImage(image:pop.images.isNotEmpty
+                  ? NetworkImage(pop.images[0])
+              : AssetImage('assets/images/no_image.png') as ImageProvider,
+      fit: BoxFit.cover,),
                 ),
               ),
             ),
@@ -30,7 +33,7 @@ class Popular extends StatelessWidget {
             Text(pop.name),
             SizedBox(height: 5),
             Text(
-              "\$${pop.prices.toStringAsFixed(2)}",
+              "\$${pop.price.toStringAsFixed(2)}",
               style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
             ),
           ],

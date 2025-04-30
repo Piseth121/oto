@@ -1,6 +1,7 @@
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+
 import '../models/order_model.dart';
 
 
@@ -15,17 +16,18 @@ class OrderController extends GetxController {
     loadOrders();
   }
 
-  void addOrder(String title, double total, String status, String image) {
+  void addOrder(String title, double total, String status, List<String> images) {
     final newOrder = Order(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: title,
       total: total,
       status: status,
-      image: image,
+      images: images,
     );
     orders.add(newOrder);
     saveOrders();
   }
+
   void saveOrders() {
     List<Map<String, dynamic>> orderList = orders.map((order) => order.toJson()).toList();
     storage.write('orders', orderList);
@@ -47,7 +49,7 @@ class OrderController extends GetxController {
         title: oldOrder.title,
         total: oldOrder.total,
         status: newStatus,
-        image: oldOrder.image,
+        images: oldOrder.images,
       );
     }
   }

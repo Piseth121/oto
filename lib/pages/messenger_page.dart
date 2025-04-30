@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otokhi/Pages/login_page.dart';
-import 'package:otokhi/constant_model/top_selling.dart';
+import 'package:otokhi/controllers/product_controller.dart';
 import '../widgets/chat.dart';
 import '../widgets/itme_card_1.dart';
 import '../widgets/notifications.dart';
@@ -14,6 +14,7 @@ class Messenger extends StatefulWidget {
 }
 
 class _MessengerState extends State<Messenger> {
+  final ProductController controller = Get.put(ProductController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +69,17 @@ class _MessengerState extends State<Messenger> {
           ),
           //Divider(),
           buildText(),
+          Divider(color: Colors.black,),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Text(
+                'Recommended for you',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
           _buildRecommended(),
         ],
       ),
@@ -131,16 +143,6 @@ class _MessengerState extends State<Messenger> {
             'Communicate and pay on PIISIIT.SHOP to enjoy purchase protection',
             style: TextStyle(fontSize: 14),
           ),
-          Divider(
-            height: 20,
-          ),
-          Container(
-            alignment: Alignment.topLeft,
-            child: Text(
-              'Recommended for you',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-          ),
         ],
       ),
     );
@@ -152,13 +154,13 @@ class _MessengerState extends State<Messenger> {
       child: GridView.builder(
           shrinkWrap: true,
           primary: false,
-          itemCount: topselling.length,
+          itemCount: controller.topSolds.length,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 5,
               childAspectRatio: 0.70,
               crossAxisSpacing: 5),
-          itemBuilder: (context, index) => ItemCard(pro: topselling[index])),
+          itemBuilder: (context, index) => ItemCard(pro: controller.topSolds[index])),
     );
 
   }

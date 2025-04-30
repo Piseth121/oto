@@ -3,14 +3,14 @@ class Order {
   final String title;
   final double total;
   final String status;
-  final String image;
+  final List<String> images;
 
   Order({
     required this.id,
     required this.title,
     required this.total,
     required this.status,
-    required this.image,
+    required this.images,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -19,14 +19,15 @@ class Order {
       title: json['title'],
       total: json['total'],
       status: json['status'],
-      image: json['image'],
+      images: List<String>.from(json['images'] ?? []),
     );
   }
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,
     'total': total,
     'status': status,
-    'image': image,
+    'images': images,
   };
 }

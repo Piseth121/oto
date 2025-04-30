@@ -2,27 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../constant_model/new_product.dart';
+import 'package:otokhi/Pages/cart_page.dart';
+import '../controllers/cart_controller.dart';
+import '../controllers/favorite_controller.dart';
+import '../controllers/product_controller.dart';
 import '../controllers/review_controller.dart';
 import '../models/review_model.dart';
+import '../widgets/chat.dart';
+import '../widgets/favorite.dart';
 import '../widgets/itme_card_1.dart';
 
-class DetailPageP extends StatefulWidget {
+class DetailPage extends StatefulWidget {
   final dynamic proData;
 
-  DetailPageP({required this.proData});
+  DetailPage({required this.proData});
 
   @override
-  State<DetailPageP> createState() => _DetailPagePState();
+  State<DetailPage> createState() => _DetailPageState();
 }
 
-class _DetailPagePState extends State<DetailPageP> {
+class _DetailPageState extends State<DetailPage> {
+  final CartController cartController = Get.find<CartController>();
+  final FavoriteController favoriteController = Get.find<FavoriteController>(); // Assuming you have a FavoriteController ->
   final ReviewController reviewController = Get.put(ReviewController());
+  final ProductController controller = Get.put(ProductController());
+
+  late bool isFavorite;
   final RxBool showAllReviews = false.obs;
 
-  @override
   void initState() {
     super.initState();
+    isFavorite = favoriteController.isFavorite(widget.proData);
   }
 
   void showReviewDialog() {
@@ -98,23 +108,68 @@ class _DetailPagePState extends State<DetailPageP> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.proData.name, style: TextStyle(fontFamily: "battambang")),
+        title: Text(widget.proData.name, style: TextStyle(fontFamily: "battambang",fontSize: 18,fontWeight: FontWeight.bold)),
         actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () {
-              // Navigate to cart page if available
-            },
-          ),
+          Obx(() {
+            return Stack(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.favorite),
+                  onPressed: () => Get.to(() => FavoriteListScreen()),
+                ),
+                if (favoriteController.favoriteItems.isNotEmpty)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '${favoriteController.favoriteItems.length}',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          Obx(() {
+            return Stack(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () => Get.to(() => CartPage()),
+                ),
+                if (cartController.cartItems.isNotEmpty)
+                  Positioned(
+                    right: 6,
+                    top: 6,
+                    child: Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '${cartController.cartItems.length}',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ),
+                    ),
+                  ),
+              ],
+            );
+          }),
         ],
       ),
       body: ListView(
         children: [
           _buildImage(),
           _buildProductInfo(),
-          Divider(height: 20, color: Colors.black),
+          Divider(height: 10,color: Colors.black,),
           _buildRecommendProduct(),
-          Divider(height: 20, color: Colors.black),
           _buildReviewsSection(),
         ],
       ),
@@ -125,16 +180,22 @@ class _DetailPagePState extends State<DetailPageP> {
   Widget _buildImage() {
     return Container(
       height: 300,
-      child: PageView.builder(
-        itemCount: widget.proData.images.length,
-        itemBuilder: (context, index) {
-          return Image.network(
-            widget.proData.images[index],
-            fit: BoxFit.cover,
-            width: double.infinity,
-            errorBuilder: (_, __, ___) => Image.asset('assets/images/no_image.png'),
-          );
-        },
+      child: Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        clipBehavior: Clip.antiAlias,
+        color: Colors.grey[200],
+        child: PageView.builder(
+          itemCount: widget.proData.images.length,
+          itemBuilder: (context, index) {
+            return Image.network(
+              widget.proData.images[index],
+              fit: BoxFit.cover,
+              width: double.infinity,
+              errorBuilder: (_, __, ___) => Image.asset('assets/images/no_image.png'),
+            );
+          },
+        ),
       ),
     );
   }
@@ -147,20 +208,63 @@ class _DetailPagePState extends State<DetailPageP> {
         children: [
           Text(widget.proData.name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, fontFamily: "battambang")),
           SizedBox(height: 10),
-          Text("\$${widget.proData.price}", style: TextStyle(fontSize: 24, color: Colors.red)),
+          Row(
+            children: [
+              RatingBar.builder(
+                initialRating: 5,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 20,
+                itemBuilder:
+                    (context, _) => const Icon(Icons.star, color: Colors.amber),
+                onRatingUpdate: (rating) {
+                  // Handle rating update
+                },
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '4.5/5',
+                style: const TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.45),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    favoriteController.toggleFavorite(widget.proData);
+                    isFavorite = favoriteController.isFavorite(widget.proData);
+                    Get.snackbar(
+                      'Favorite',
+                      isFavorite
+                          ? 'Added to favorites'
+                          : 'Removed from favorites',
+                    );
+                  });
+                },
+                icon: Icon(
+                  Icons.favorite,
+                  size: 30,
+                  color: isFavorite ? Colors.red : Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          Text("\$${widget.proData.price}", style: TextStyle(fontSize: 20, color: Colors.red)),
           SizedBox(height: 10),
-          Text("Category: ${widget.proData.category}", style: TextStyle(fontSize: 16,fontFamily: "battambang"), ),
+          Text("Category: ${widget.proData.category}", style: TextStyle(fontSize: 16,fontFamily: "battambang")),
           SizedBox(height: 10),
           Text("In Stock: ${widget.proData.stockQty}", style: TextStyle(fontSize: 16)),
-          Divider(height: 20, color: Colors.black),
-          Text("Description:", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           SizedBox(height: 10),
-          Divider(),
+          Divider(height: 10,color: Colors.black,),
+          Text("Description :", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
           Text(widget.proData.description ?? "No description available", style: TextStyle(fontSize: 16)),
         ],
       ),
     );
   }
+
 
   Widget _buildBottom() {
     return BottomAppBar(
@@ -176,7 +280,10 @@ class _DetailPagePState extends State<DetailPageP> {
               ),
               child: IconButton(
                 onPressed: () {
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Chat()),
+                  );
                 },
                 icon: Icon(
                   Icons.messenger_outline,
@@ -190,20 +297,19 @@ class _DetailPagePState extends State<DetailPageP> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
-                    // Add to cart logic
+                    cartController.addToCart(widget.proData);
+                    Get.to(()=> CartPage());
+                    Get.snackbar("Added to Cart", "${widget.proData.name} has been added to your cart.",
+                        snackPosition: SnackPosition.TOP,
+                        backgroundColor: Colors.grey,
+                        colorText: Colors.white);
                   },
+                  icon: Icon(Icons.add_shopping_cart, color: Colors.white),
+                  label: Text("Add to Cart", style: TextStyle(fontSize: 15,color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(vertical: 10),
                     backgroundColor: Colors.redAccent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Text(
-                    'Add to Cart',
-                    style: TextStyle(fontSize: 15, color: Colors.white),
                   ),
                 ),
               ),
@@ -213,7 +319,7 @@ class _DetailPagePState extends State<DetailPageP> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     // Add to cart logic
                   },
@@ -224,13 +330,11 @@ class _DetailPagePState extends State<DetailPageP> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: Text(
-                    'Buy Now',
-                    style: TextStyle(fontSize: 15, color: Colors.white),
+                  icon: Icon(Icons.shopping_bag, color: Colors.white),
+                  label: Text("Buy Now",style: TextStyle(fontSize: 15,color: Colors.white),),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
@@ -258,9 +362,9 @@ class _DetailPagePState extends State<DetailPageP> {
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            itemCount: products.length,
+            itemCount: controller.recommendeds.length,
             itemBuilder: (BuildContext context, int index) {
-              return ItemCard(pro: products[index]);
+              return ItemCard(pro: controller.recommendeds[index]);
             },
           ),
         ),
@@ -272,7 +376,7 @@ class _DetailPagePState extends State<DetailPageP> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Divider(),
+        const Divider(height: 20,),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -293,12 +397,10 @@ class _DetailPagePState extends State<DetailPageP> {
             ],
           ),
         ),
-        const SizedBox(height: 10),
         Obx(() {
           final reviews = reviewController.reviews;
           final visibleReviews =
           showAllReviews.value ? reviews : reviews.take(5).toList();
-
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

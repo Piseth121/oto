@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otokhi/constant_model/models.dart';
-import '../Pages/detail_page.dart';
+import '../Pages/product_detail.dart';
 import '../controllers/cart_controller.dart';
+import '../models/product_model.dart';
+import 'loading_skeleton.dart';
 
 
 
@@ -11,81 +12,78 @@ class ItemCard extends StatelessWidget {
 
   ItemCard({super.key, required this.pro});
 
-  final CartController cartController = Get.put(CartController());
-
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => DetailPage(proData: pro)),
-      ),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.41,
-        child: Card(
-          elevation: 4,
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    image: DecorationImage(
-                      image: AssetImage(pro.image),
-                      fit: BoxFit.cover,
+    final cartController = Get.find<CartController>();
+    final item = pro;
+    return Obx(() {
+      if (cartController.isLoading.value) {
+        return ShimmerBox(width: 150, height: 220);
+      }
+      return Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: InkWell(
+          onTap: () => Get.to(() => DetailPage(proData: item)),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.41,
+            height: 220, // Ensure height is fixed to avoid layout errors
+            child: Card(
+              elevation: 4,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: item.images.isNotEmpty
+                              ? NetworkImage(item.images[0])
+                              : AssetImage('assets/images/no_image.png') as ImageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Text(
-                  pro.name,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "\$${pro.prices.toStringAsFixed(2)}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 10),
+                    child: Text(
+                      item.name,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "battambang"),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    IconButton(
-                      onPressed: () {
-                        cartController.addToCart(pro);
-                        Get.snackbar(
-                          "Added to Cart",
-                          "${pro.name} has been added.",
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: Colors.green.withOpacity(0.7),
-                          colorText: Colors.white,
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.add_shopping_cart,
-                        color: Colors.red,
-                        size: 18,
-                      ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "\$${item.price}",
+                          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                             cartController.addToCart(item);
+                            Get.snackbar("Added to Cart", "${item.name} has been added to your cart.",
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Colors.grey.withOpacity(0.7),
+                                colorText: Colors.white);
+                          },
+                          icon: Icon(Icons.add_shopping_cart, color: Colors.red, size: 18),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

@@ -115,9 +115,12 @@ class AddressController extends GetxController {
     List<dynamic>? storedAddresses = box.read<List>('addresses');
     if (storedAddresses != null) {
       addressList.assignAll(
-          storedAddresses.map((e) => Map<String, String>.from(e.map((key, value) => MapEntry(key.toString(), value.toString())))).toList()
+          storedAddresses.map((e) => Map<String, String>.from(
+              e.map((key, value) => MapEntry(key.toString(), value.toString()))
+          )).toList()
       );
     }
+
     defaultAddressIndex.value = box.read<int>('defaultIndex');
   }
 

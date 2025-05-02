@@ -87,9 +87,9 @@ class _HomeProductState extends State<HomeProduct> {
             return GridView.builder(
               shrinkWrap: true,
               primary: false,
-              itemCount: controller.recommendeds.length,
+              itemCount: controller.products.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 0.70, crossAxisSpacing: 5, mainAxisSpacing: 5),
-              itemBuilder: (context, index) => _buildItemCard(controller.recommendeds[index]),
+              itemBuilder: (context, index) => _buildItemCard(controller.products[index]),
             );
           }),
         ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otokhi/controllers/product_controller.dart';
-import '../../widgets/item_card_circle.dart';
 
 class Categories extends StatefulWidget {
   Categories({super.key});

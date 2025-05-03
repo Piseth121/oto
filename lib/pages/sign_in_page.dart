@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otokhi/pages/signup_page.dart';
 import '../controllers/auth_controller.dart';
+import 'sign_up_page.dart';
 
-class LoginPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
   final authController = Get.put(AuthController());
+
   final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
+  bool passwordVisible=false;
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      appBar: AppBar(title: Text("Sign in"),centerTitle: true,),
+      appBar: AppBar(title: Text("Sign in"), centerTitle: true),
       backgroundColor: Colors.grey[100],
       body: Padding(
         padding: const EdgeInsets.only(top: 100),
@@ -38,12 +47,24 @@ class LoginPage extends StatelessWidget {
               SizedBox(height: 16),
               TextField(
                 controller: passwordController,
-                obscureText: true,
+                obscureText: passwordVisible,
                 decoration: InputDecoration(
                   labelText: "Password",
                   prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                  suffixIcon: IconButton(
+                    icon: Icon(passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: () {
+                      passwordVisible = !passwordVisible;
+                    },
+                  ),
+                  alignLabelWithHint: false,
+                  filled: true,
                 ),
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
               ),
               SizedBox(height: 24),
               ElevatedButton(
@@ -58,8 +79,7 @@ class LoginPage extends StatelessWidget {
                   minimumSize: Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: Text("Login",
-                    style: TextStyle(fontSize: 18,color: Colors.white,fontWeight: FontWeight.bold)),
+                child: Text("Sign In", style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold)),
               ),
               SizedBox(height: 12),
               Row(
@@ -68,32 +88,10 @@ class LoginPage extends StatelessWidget {
                   Text("Don't have an account?"),
                   TextButton(
                     onPressed: () => Get.to(SignUpPage()),
-                    child: Text(" Sign Up",style: TextStyle(color: Colors.blue),),
+                    child: Text(" Sign Up", style: TextStyle(color: Colors.blue)),
                   ),
                 ],
               ),
-              SizedBox(height: 12),
-              Center(child: Text('Or')),
-              SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () {
-                }, label: Row(
-                  children: [
-                    Image.asset('assets/icons/google.png',height: 20,width: 20,fit: BoxFit.cover,),
-                    SizedBox(width: 50,),
-                    Text('Sign in with Google'),
-                  ],
-                ),),
-              SizedBox(height: 12),
-              ElevatedButton.icon(
-                onPressed: () {
-                }, label: Row(
-                  children: [
-                    Image.asset('assets/icons/facebook_logo.png',height: 20,width: 20,fit: BoxFit.cover,),
-                    SizedBox(width: 50,),
-                    Text('Sign in FaceBook'),
-                  ],
-                ),),
             ],
           ),
         ),
@@ -101,4 +99,3 @@ class LoginPage extends StatelessWidget {
     );
   }
 }
-

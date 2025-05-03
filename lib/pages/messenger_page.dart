@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:otokhi/Pages/login_page.dart';
 import 'package:otokhi/controllers/product_controller.dart';
+import 'package:otokhi/pages/sign_in_page.dart';
 import '../widgets/chat.dart';
 import '../widgets/itme_card_1.dart';
 import '../widgets/notifications.dart';
+
 
 class Messenger extends StatefulWidget {
   const Messenger({super.key});
@@ -59,7 +60,7 @@ class _MessengerState extends State<Messenger> {
                 Column(
                   children: [
                     IconButton(onPressed: () {
-                      Get.to(() => LoginPage());
+                      Get.to(() => SignInPage());
                     }, icon: Icon(Icons.power_input)),
                     Text('other'),
                   ],

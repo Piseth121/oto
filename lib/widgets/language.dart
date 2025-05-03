@@ -1,61 +1,60 @@
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class Language extends StatefulWidget {
-  const Language({super.key});
+class LanguagePage extends StatelessWidget {
+  LanguagePage({super.key});
 
-  @override
-  State<Language> createState() => _LanguageState();
-}
+  final RxString selectedLanguage = Get.locale?.languageCode.obs ?? 'en'.obs;
 
-class _LanguageState extends State<Language> {
-  int _selectedValue = 1;
+  void changeLanguage(String langCode) {
+    final locale = Locale(langCode);
+    Get.updateLocale(locale);
+    selectedLanguage.value = langCode;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Language'),
+        title: Text('Select Language'.tr),
+        shadowColor: Colors.red,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 1,
+        iconTheme: IconThemeData(color: Colors.black),
+
       ),
       body: ListView(
         children: [
-          RadioListTile(
+          ListTile(
             title: Text('English'),
-            value: 1,
-            groupValue:
-            _selectedValue, // Use _selectedValue to track the selected option
-            onChanged: (value) {
-              setState(() {
-                _selectedValue =
-                value!; // Update _selectedValue when option 1 is selected
-              });
-            },
+            trailing: Obx(() => Card(
+              child: selectedLanguage.value == 'en'
+                  ? Icon(Icons.check, color: Colors.green)
+                  : null,
+            )),
+            onTap: () => changeLanguage('en'),
           ),
-          RadioListTile(
-            title: Text('Khmer'),
-            value: 2,
-            groupValue:
-            _selectedValue, // Use _selectedValue to track the selected option
-            onChanged: (value) {
-              setState(() {
-                _selectedValue =
-                value!; // Update _selectedValue when option 1 is selected
-              });
-            },
+          Divider(),
+          ListTile(
+            title: Text('Khmer (ខ្មែរ)', style: TextStyle(fontFamily: "battambang"),),
+            trailing: Obx(() => Card(
+              child: selectedLanguage.value == 'km'
+                  ? Icon(Icons.check, color: Colors.green)
+                  : null,
+            )),
+            onTap: () => changeLanguage('km'),
           ),
-          RadioListTile(
-            title: Text('Chinese'),
-            value: 3,
-            groupValue:
-            _selectedValue, // Use _selectedValue to track the selected option
-            onChanged: (value) {
-              setState(() {
-                _selectedValue =
-                value!; // Update _selectedValue when option 1 is selected
-              });
-            },
+          Divider(),
+          ListTile(
+            title: Text('Chinese (中文)'),
+            trailing: Obx(() => Card(
+              child: selectedLanguage.value == 'zh'
+                  ? Icon(Icons.check, color: Colors.green)
+                  : null,
+            )),
+            onTap: () => changeLanguage('zh'),
           ),
-
         ],
       ),
     );

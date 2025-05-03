@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:otokhi/Pages/profile.dart';
+import 'package:otokhi/Pages/profile_page.dart';
 import 'cart_page.dart';
 import 'categories_page.dart';
 import 'home_page.dart';

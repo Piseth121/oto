@@ -1,72 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-
-class SearchController extends GetxController {
-  var query = ''.obs;
-  var items = [
-    'គ្រឿងប្រដាប់ជាង',
-    'ច្រវាក់និងកៅឡាក់',
-    'ម៉ូទ័រយោង',
-    'ខ្សែស្ទួច',
-  ].obs;
-
-  List<String> get filteredItems => items
-      .where((item) => item.toLowerCase().contains(query.value.toLowerCase()))
-      .toList();
-}
+import '../Pages/product_detail.dart';
+import '../controllers/product_controller.dart';
+import '../models/product_model.dart';
 
 class SearchPage extends StatelessWidget {
   SearchPage({super.key});
 
-  final SearchController controller = Get.put(SearchController());
+  final ProductController productController = Get.find<ProductController>();
+  final RxString searchQuery = ''.obs;
+
+  List<Product> get searchResults {
+    final q = searchQuery.value.toLowerCase();
+    return productController.products.where((product) {
+      return product.name.toLowerCase().contains(q) ||
+          product.category.toLowerCase().contains(q);
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Search Products')),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+         title: Container(
+           padding: EdgeInsets.symmetric(horizontal: 12),
+           decoration: BoxDecoration(
+             border: Border.all(color: Colors.grey.shade300),
+             borderRadius: BorderRadius.circular(25),
+             color: Colors.grey.shade100,
+           ),
+           child: TextField(
+             onChanged: (value) => searchQuery.value = value,
+             decoration: InputDecoration(
+               icon: Icon(Icons.search, color: Colors.grey),
+               hintText: 'Search by name or category...',
+               border: InputBorder.none,
+             ),
+           ),
+         ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              onChanged: (value) => controller.query.value = value,
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-              ),
-            ),
-            SizedBox(height: 16),
             Expanded(
               child: Obx(() {
-                final results = controller.filteredItems;
+                final results = searchResults;
                 if (results.isEmpty) {
-                  return Center(child: Text('No results found'));
+                  return Center(child: Text('No matching products found'));
                 }
                 return ListView.builder(
                   itemCount: results.length,
                   itemBuilder: (context, index) {
+                    final product = results[index];
                     return ListTile(
-                      leading: Icon(Icons.disabled_by_default, color: Colors.grey),
-                      title: Text(
-                        results[index],
-                        style: TextStyle(fontFamily: "battambang", fontSize: 16),
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(6),
+                        child: product.images.isNotEmpty
+                            ? Image.network(product.images[0], width: 60, height: 60, fit: BoxFit.cover)
+                            : Image.asset('assets/images/no_image.png', width: 60, height: 60),
                       ),
-                      onTap: () {
-                        final item = results[index];
-                        if (item == 'គ្រឿងប្រដាប់ជាង') {
-                        } else if (item == 'ច្រវាក់និងកៅឡាក់') {
-                        } else {
-                          // Default or fallback
-                          Get.snackbar('Not found', 'No page set for this item');
-                        }
-                      },
+                      title: Text(product.name, style: TextStyle(fontFamily: "battambang")),
+                      subtitle: Text(product.category, style: TextStyle(fontFamily: "battambang")),
+                      onTap: () => Get.to(() => DetailPage(proData: product)),
                     );
                   },
                 );
               }),
-            ),
+            )
           ],
         ),
       ),

@@ -145,9 +145,11 @@ class _MyOrderPageState extends State<MyOrderPage> with SingleTickerProviderStat
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        IconButton(onPressed: (){
+                          orderController.removeOrder(order.id);
+                        }, icon: Icon(Icons.delete)),
                         Row(
                           children: [
-
                             Text(
                               "Status:",
                               style: TextStyle(color: Colors.black),

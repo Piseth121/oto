@@ -11,10 +11,7 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Sign Up"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: Text("Sign Up"), centerTitle: true),
       backgroundColor: Colors.grey[100],
       body: Padding(
         padding: const EdgeInsets.only(top: 100),
@@ -60,9 +57,9 @@ class SignUpPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   authController.signUp(
-                    nameController.text.trim(),
                     emailController.text.trim(),
                     passwordController.text.trim(),
+                    nameController.text.trim(),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -70,7 +67,7 @@ class SignUpPage extends StatelessWidget {
                   minimumSize: Size(double.infinity, 50),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
-                child: Text("Sign Up", style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold)),
+                child: Text("Sign Up", style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
               ),
               SizedBox(height: 12),
               Row(
@@ -79,7 +76,7 @@ class SignUpPage extends StatelessWidget {
                   Text("Already have an account?"),
                   TextButton(
                     onPressed: () => Get.back(),
-                    child: Text(" Login",style: TextStyle(color: Colors.blue),),
+                    child: Text(" Login", style: TextStyle(color: Colors.blue)),
                   ),
                 ],
               ),

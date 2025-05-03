@@ -29,6 +29,9 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             title: Text('OTOKHI'),
             backgroundColor: Colors.black,
+            foregroundColor: Colors.white,
+            elevation: 3,
+            shadowColor: Colors.orange,
           ),
           body: Center(child: CircularProgressIndicator()),
         );

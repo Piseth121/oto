@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:otokhi/pages/main_page.dart';
-import 'login_page.dart';
+import 'sign_in_page.dart';
 
 class GetStartedPage extends StatelessWidget {
   const GetStartedPage({Key? key}) : super(key: key);
@@ -49,7 +49,7 @@ class GetStartedPage extends StatelessWidget {
                       onPressed: (){
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => LoginPage()),
+                      MaterialPageRoute(builder: (_) => SignInPage()),
                     );
                   }, child: const Text('Sign in')),
                 ),

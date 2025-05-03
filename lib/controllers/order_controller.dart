@@ -27,6 +27,11 @@ class OrderController extends GetxController {
     saveOrders();
   }
 
+  void removeOrder(String orderId) {
+    orders.removeWhere((order) => order.id == orderId);
+    saveOrders();
+  }
+
   void saveOrders() {
     List<Map<String, dynamic>> orderList = orders.map((order) => order.toJson()).toList();
     storage.write('orders', orderList);

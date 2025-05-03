@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:otokhi/pages/splach_screen.dart';
+import 'package:otokhi/widgets/translations.dart';
 import 'controllers/auth_controller.dart';
 import 'controllers/cart_controller.dart';
 import 'controllers/favorite_controller.dart';
@@ -28,6 +29,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      translations: MyTranslations(),
+      locale: Locale('en'),
+      fallbackLocale: Locale('en'),
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

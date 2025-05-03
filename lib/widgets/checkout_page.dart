@@ -32,6 +32,13 @@ class _CheckoutPageState extends State<CheckoutPage> {
   }
 
   void placeOrder() {
+    if (cartController.cartItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Your cart is empty')),
+      );
+      return;
+    }
+
     if (!isAddressSelected) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please select a shipping address')),
@@ -44,10 +51,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
       final orderController = Get.find<OrderController>();
       orderController.addOrder(
-          "Order from ${selectedAddress!['name']}",
-          cartController.total,
-          "Processing",
-          cartController.cartItems.map((item) => item.images[0]).toList()
+        "Order from ${selectedAddress!['name']}",
+        cartController.total,
+        "Processing",
+        cartController.cartItems.map((item) => item.images[0]).toList(),
       );
 
       showDialog(
@@ -58,7 +65,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Thank you, ${selectedAddress!['name']}!', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+              Text('Thank you, ${selectedAddress!['name']}!', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               SizedBox(height: 8),
               Text('Shipping to: ${selectedAddress!['name']}'),
               Text('${selectedAddress!['street']}, ${selectedAddress!['city']}'),
@@ -77,14 +84,14 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(onPressed: (){
-                  Get.back();
-                }, child: Text("cancel",style: TextStyle(color: Colors.red[500]),)),
+                TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text("Cancel", style: TextStyle(color: Colors.red[500])),
+                ),
                 TextButton(
                   onPressed: () {
                     Get.to(() => MyOrderPage());
                     Get.snackbar('Order Placed', 'Thank you for your order!', snackPosition: SnackPosition.BOTTOM);
-                    // Optional: cartController.clearCart(); to empty cart
                     cartController.clearCart();
                   },
                   child: Text('OK'),
@@ -96,6 +103,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       );
     }
   }
+
 
 
   void _handlePaymentMethodChange(int? value) {

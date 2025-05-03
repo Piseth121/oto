@@ -61,11 +61,11 @@ class _HomeProductState extends State<HomeProduct> {
   }
 
   Widget _newProducts() {
-    return _section("New Products", () => NewProductsPage(), controller.newProducts); // ✅ FIXED
+    return _section("New Products", () => NewProductsPage(), controller.newProducts);
   }
 
   Widget _topSelling() {
-    return _section("Top Selling", () => TopSellingPage(), controller.topSolds); // ✅ FIXED
+    return _section("Top Selling", () => TopSellingPage(), controller.topSolds);
   }
 
   Widget _buildForYou() {

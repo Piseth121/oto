@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import '../controllers/profile_controller.dart';
 import 'payment_page.dart';
 import 'address_page.dart';
 import 'sign_in_page.dart';
@@ -22,6 +23,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final ProfileController profileController = Get.put(ProfileController());
   final box = GetStorage();
   File? _profileImage;
 
@@ -122,17 +124,21 @@ class _ProfileState extends State<Profile> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        if (isLoggedIn) _pickImage(); // Allow image change only if logged in
+                        if (isLoggedIn) profileController.pickAndUploadImage();
                       },
-                      child: CircleAvatar(
-                        radius: 40,
-                        backgroundImage: isLoggedIn
-                            ? (_profileImage != null
-                            ? FileImage(_profileImage!)
-                            : AssetImage('assets/images/default_user.png') as ImageProvider)
-                            : AssetImage('assets/images/guest.png'),
-                      ),
+                      child: Obx(() {
+                        final file = profileController.profileImage.value;
+                        return CircleAvatar(
+                          radius: 40,
+                          backgroundImage: isLoggedIn
+                              ? (file != null
+                              ? FileImage(file)
+                              : AssetImage('assets/images/default_user.png') as ImageProvider)
+                              : AssetImage('assets/images/guest.png'),
+                        );
+                      }),
                     ),
+
 
                     SizedBox(width: 16),
                     Column(

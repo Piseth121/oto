@@ -1,33 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import '../services/auth_service.dart';
 
 class AuthController extends GetxController {
   var isLoggedIn = false.obs;
   final box = GetStorage();
+  final AuthService _authService = AuthService();
 
   Future<void> login(String email, String password) async {
-    final url = Uri.parse('https://www.otokhi.com/api/user/login');
     try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "username": email,
-          "password": password,
-        }),
-      );
+      final result = await _authService.login(email, password);
+      final statusCode = result['statusCode'];
+      final data = result['body'];
 
-      final data = jsonDecode(response.body);
-      print('Login Response: ${response.body}');
+      print('🔐 Login Response: $data');
 
-      if (response.statusCode == 200 && data['status'] == true) {
-        // Save user info and token to local storage
+      if (statusCode == 200 && data['status'] == true) {
         box.write('isLoggedIn', true);
         box.write('user', data['user']);
-        box.write('token', data['token']); // only if token is returned
+        box.write('token', data['token']); // optional
 
         isLoggedIn.value = true;
 
@@ -43,29 +35,25 @@ class AuthController extends GetxController {
       }
     } catch (e) {
       Get.snackbar('Error', 'Something went wrong: $e');
-      print('Login error: $e');
+      print('❌ Login error: $e');
     }
   }
 
-
-
-  void signUp(String email, String password, String name) async {
-    final url = Uri.parse('https://www.otokhi.com/api/user/signup');
-    final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({
-      'username': email,
-      'password': password,
-      'name': name
-    });
-
+  Future<void> signUp(String email, String password, String name) async {
     try {
-      final response = await http.post(url, headers: headers, body: body);
+      final result = await _authService.signUp(email, password, name);
+      final statusCode = result['statusCode'];
+      final data = result['body'];
 
-      if (response.statusCode == 200) {
+      if (statusCode == 200 && data['status'] == true) {
+        box.write('isLoggedIn', true);
+        box.write('user', data['user']);
         isLoggedIn.value = true;
+
+        Get.snackbar('Success', 'Account created successfully!');
         Get.offAllNamed('/home');
       } else {
-        Get.snackbar('Sign Up Failed', 'Unable to create account');
+        Get.snackbar('Sign Up Failed', data['message'] ?? 'Unable to create account');
       }
     } catch (e) {
       Get.snackbar('Error', 'An error occurred: $e');
@@ -73,6 +61,7 @@ class AuthController extends GetxController {
   }
 
   void logout() {
+    box.erase();
     isLoggedIn.value = false;
     Get.offAllNamed('/login');
   }
